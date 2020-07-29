@@ -32,7 +32,7 @@ function App() {
   return (
     <div className="App">
       <main className="App-header">
-        <p>Введите логин и пароль</p>
+        <p>Введите логин и пароль...</p>
         <Form {...layout} 
         name="basic" 
         initialValues={{ remember: true }} 
