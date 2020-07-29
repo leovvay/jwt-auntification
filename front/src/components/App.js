@@ -17,9 +17,12 @@ function App() {
 
 
   const onFinish = values => {
-    console.log('Success:', values);
-    fetch('http://localhost:8080', {
-		method: 'GET'
+    fetch('http://localhost:8080/user/signup', {
+    method: 'POST',
+    body: JSON.stringify(values),
+    headers: {
+      'Content-Type': 'application/json'
+    }
 	}).then((response) => {
 		console.log(response);
 	})
