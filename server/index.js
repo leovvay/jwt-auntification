@@ -1,8 +1,8 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import helmet from 'helmet';
-import server from 'http';
-import router from './router/router.mjs'
+const express = require('express');
+const bodyParser = require('body-parser');
+const helmet = require('helmet');
+const server = require('http');
+const router = require('./router/router.js');
 
 const app = express();
 const myServer = server.Server(app);
@@ -35,28 +35,9 @@ myServer.listen(port, (err) => {
 app.use('/user', router);
 
 app.get('/', (err, res) => {
-	res.status(200);
-	res.json({ working: true });
-	res.end();
+  res.status(200);
+  res.json({ working: true });
+  res.end();
 });
 
-// app.post('/signup', (err, res) => {
-// 	res.status(200);
-//   res.send('signup working');
-//   const user = reg
-// 	// res.end();
-// });
-
-// app.post('/login', (err, res) => {
-// 	res.status(200);
-// 	res.send('working');
-// 	res.end();
-// });
-
-// app.put('/', (err, res) => {
-// 	res.status(200);
-// 	res.send('working');
-// 	res.end();
-// });
-
-export default myServer;
+module.exports = myServer;
