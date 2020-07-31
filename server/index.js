@@ -2,7 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const server = require('http');
-const router = require('./router/router.js');
+const cors = require('cors');
+
+const router = require('./router/router');
+
+const config = require('./config');
+
 
 const app = express();
 const myServer = server.Server(app);
@@ -20,9 +25,7 @@ app.use((req, res, next) => {
 });
 
 //pre-flight requests
-app.options('*', function (req, res) {
-  res.send(200);
-});
+app.options('*', cors());
 
 myServer.listen(port, (err) => {
   if (err) {

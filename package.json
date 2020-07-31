@@ -1,0 +1,4 @@
+{"scripts": {
+    "start": " (cd front && yarn start) && ((cd ../server) && npm run start)"
+  }
+}
