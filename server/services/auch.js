@@ -3,17 +3,34 @@ const crypto = require('crypto');
 
 const jwt = require('jsonwebtoken');
 
- class AuthService {
+const db = require('../db');
+
+class AuthService {
+  async LogIn(login, password) {
+    const {
+      rows: [userRecord],
+    } = await db.query(`SELECT * FROM users WHERE login = $1`, [login]);
+    if (!userRecord) {
+      throw new Error('User not found');
+    } else {
+      const correctPassword = await argon2.verify(userRecord.password, password);
+      if (!correctPassword) {
+        throw new Error('Incorrect password');
+      }
+    }
+    console.log('login: ', login);
+    const token = this.generateJWt(login);
+    
+    console.log('token: ', token);
+    return {
+      user: { login, fromBD: true },
+      token,
+    };
+  }
+
   async SignUp(login, password) {
     const salt = crypto.randomBytes(32);
     const passwordHashed = await argon2.hash(password, { salt });
-
-    // userRecord = await UserModel.create({
-    //     password: passwordHashed,
-    //     email,
-    //     salt: salt.toString('hex'),
-    //     name,
-    //   });
 
     const token = this.generateJWt(login);
     return {
@@ -25,9 +42,7 @@ const jwt = require('jsonwebtoken');
   generateJWt(login) {
     return jwt.sign(
       {
-        data: {
-          login: login,
-        },
+        data: { login },
       },
       'MySuP3R_z3kr3t.'
     ); // @TODO move this to an env var

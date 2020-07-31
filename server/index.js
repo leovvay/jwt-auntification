@@ -1,8 +1,10 @@
-const express = require( 'express');
-const bodyParser = require( 'body-parser');
+
+const express = require('express');
+const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const server = require('http');
-const router = require('./router/router.js') 
+const router = require('./router/router');
+
 
 const app = express();
 const myServer = server.Server(app);
@@ -22,6 +24,7 @@ app.use((req, res, next) => {
 //pre-flight requests
 app.options('*', function (req, res) {
   res.sendStatus(200);
+
 });
 
 myServer.listen(port, (err) => {
