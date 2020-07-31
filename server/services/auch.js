@@ -1,5 +1,6 @@
 const argon2 = require('argon2');
 const crypto = require('crypto');
+
 const jwt = require('jsonwebtoken');
 
 const mailer = require('../services/mailer');
@@ -53,6 +54,7 @@ class AuthService {
 
     const stringSalt = salt.toString('hex');
     this.addUserToDB(user, stringSalt, passwordHashed);
+    
     const token = this.generateJWt(login);
 
     const link = `<a href="${config.domen}/registration-success?token=${token}">Click here for verify your account</a>`;

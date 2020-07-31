@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-
 import {Switch, Route, useLocation} from 'react-router-dom'
 
 import SignupForm from './signupForm/';
@@ -8,9 +7,6 @@ import RegistrationSuccess from './RegistrationSuccess';
 import Page404 from './Page404/';
 
 import './App.css';
-
- 
-    
 
 function App() {
   const location = useLocation();
@@ -39,6 +35,7 @@ function App() {
         <Route exact path='/registration-success' component={RegistrationSuccess}/>
         <Route component={Page404}/>
       </Switch>
+
       </main>
     </div>
   );
