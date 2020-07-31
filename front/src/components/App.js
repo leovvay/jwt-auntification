@@ -24,8 +24,10 @@ function App() {
       'Content-Type': 'application/json'
     }
 	}).then((response) => {
-		console.log(response);
-	})
+		return response.json();
+	}).then((jsonAnswer) => {
+    console.log('jsonAnswer: ', jsonAnswer);
+  })
   };
 
   const onFinishFailed = errorInfo => {
@@ -55,7 +57,6 @@ function App() {
             label="Password"
             name="password"
             placeholder="password"
-            
             rules={[{ required: true, message: 'Please input your password!' }]}
           >
             <Input.Password ref={refPassword}/>

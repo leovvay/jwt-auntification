@@ -1,5 +1,6 @@
 const argon2 = require('argon2');
 const crypto = require('crypto');
+
 const jwt = require('jsonwebtoken');
 
 const db = require('../db');
@@ -30,9 +31,6 @@ class AuthService {
   async SignUp(login, password) {
     const salt = crypto.randomBytes(32);
     const passwordHashed = await argon2.hash(password, { salt });
-
-    // userRecord = await db.query()
-    // salt: salt.toString('hex'), passwordHashed
 
     const token = this.generateJWt(login);
     return {

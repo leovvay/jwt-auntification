@@ -1,7 +1,5 @@
 const AuthService = require('../services/auch.js');
 
-
-
 async function signup(req, res, next) {
   try {
     const { login, password } = req.body;
