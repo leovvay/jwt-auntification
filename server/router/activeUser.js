@@ -6,7 +6,7 @@ async function activeUser(req, res, next) {
     await authService.activateUser(req.body);
     return res.send('now you active');
   } catch (e) {
-    return res.json(e).status(500).end();
+    return res.sendStatus(500);
   }
 }
 

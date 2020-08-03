@@ -8,8 +8,6 @@ const router = require('./router/router');
 
 const config = require('./config');
 
-
-
 const app = express();
 const myServer = server.Server(app);
 const port = 8080;
@@ -27,7 +25,6 @@ app.use((req, res, next) => {
 
 //pre-flight requests
 app.options('*', cors());
-
 
 myServer.listen(port, (err) => {
   if (err) {
