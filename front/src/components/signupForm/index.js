@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 
-import { status200, status401 } from '../../constants';
+import { OK, UNAUTHORIZED } from '../../constants';
 
 
 const layout = {
@@ -24,14 +24,14 @@ export default function SignupForm(props) {
         'Content-Type': 'application/json',
       },
     });
-    if (request.status === status200) {
+    if (request.status === OK) {
       const answer = request.json();
       localStorage.userData = JSON.stringify(answer);
       setIsAlreadyExists(false);
       Modal.success({
         content: `an email: ${values.email} was sent to confirm the registration`,
       });
-    } else if (request.status === status401) {
+    } else if (request.status === UNAUTHORIZED) {
       setIsAlreadyExists(values.login);
     }
   };

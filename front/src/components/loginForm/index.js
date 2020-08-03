@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, Input } from 'antd';
 
-import { status200, status401, status403 } from '../../constants';
+import { OK, UNAUTHORIZED, FORBIDDEN } from '../../constants';
 
 const layout = {
   labelCol: { span: 8 },
@@ -32,7 +32,7 @@ export default function LoginForm({ setUserName, thisModal }) {
     } catch (error) {
       return console.log('fetch error', error);
     }
-    if (request.status === status200) {
+    if (request.status === OK) {
       const answer = await request.json();
       if (answer) {
         localStorage.userData = JSON.stringify(answer);
@@ -45,10 +45,10 @@ export default function LoginForm({ setUserName, thisModal }) {
           thisModal.destroyAll();
         }
       }
-    } else if (request.status === status401) {
+    } else if (request.status === UNAUTHORIZED) {
       setMessage({status: 'error', 
       text: 'wrong login / password',});
-    } else if (request.status === status403) {
+    } else if (request.status === FORBIDDEN) {
       setMessage({status: 'error', 
       text: `you haven't confirmed the registration, check your e-mail`});
     }
