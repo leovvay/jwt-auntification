@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Form, Input } from 'antd';
 
+import { status200, status401, status403 } from '../../constants';
+
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
@@ -9,11 +11,13 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-export default function signupForm({ setUserName }) {
+export default function LoginForm({ setUserName, thisModal }) {
+  const [message, setMessage] = useState({
+    status: '',
+    text: '',
+  });
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [isCorrect, setIsCorrect] = useState(true);
-  let status, message;
+  const { status, text } = message;
 
   const onFinish = async (values) => {
     let request;
@@ -26,19 +30,27 @@ export default function signupForm({ setUserName }) {
         },
       });
     } catch (error) {
-      return  console.log('fetch error',  error);
+      return console.log('fetch error', error);
     }
-    if (request.status === 200) {
+    if (request.status === status200) {
       const answer = await request.json();
       if (answer) {
         localStorage.userData = JSON.stringify(answer);
       }
       if (answer.user) {
         setUserName(answer.user.login);
-        setIsCorrect(true);
+        setMessage({status: '', text: '',});
+        console.log('thisModal: ', thisModal);
+        if (thisModal) {
+          thisModal.destroyAll();
+        }
       }
-    } else if (request.status === 401) {
-      setIsCorrect(false);
+    } else if (request.status === status401) {
+      setMessage({status: 'error', 
+      text: 'wrong login / password',});
+    } else if (request.status === status403) {
+      setMessage({status: 'error', 
+      text: `you haven't confirmed the registration, check your e-mail`});
     }
   };
 
@@ -46,14 +58,6 @@ export default function signupForm({ setUserName }) {
     console.log('Failed:', errorInfo);
   };
 
-  
-  if (isCorrect) {
-    status ='';
-    message = '';
-  }  else {
-    status = 'error'
-    message = 'wrong login / password'
-  }
 
   return (
     <Form
@@ -77,7 +81,7 @@ export default function signupForm({ setUserName }) {
         name="password"
         placeholder="password"
         validateStatus={status}
-        help={message}
+        help={text}
         rules={[{ required: true, message: 'Please input your password!' }]}
       >
         <Input.Password />
@@ -90,5 +94,3 @@ export default function signupForm({ setUserName }) {
     </Form>
   );
 }
-
-

@@ -9,9 +9,14 @@ header img {
 
 .container {
     margin: auto;
-    height: 50px;
+    height: 100%;
+    min-height: 50px;
     max-width: 1200px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+}
+
+.container button {
+    margin: 10px;
 }
