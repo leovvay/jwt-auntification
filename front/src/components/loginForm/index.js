@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Input } from 'antd';
 
 const layout = {
@@ -10,36 +10,50 @@ const tailLayout = {
 };
 
 export default function signupForm({ setUserName }) {
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [isCorrect, setIsCorrect] = useState(true);
+  let status, message;
+
   const onFinish = async (values) => {
-    let ask
-    try { 
-      ask = await fetch('http://localhost:8080/user/login', {
-      method: 'POST',
-      body: JSON.stringify(values),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  } catch(error) {
-    return console.log('ошибка',  error);
-  }
-  if (ask.status === 200) {
-    const answer = await ask.json();
-    if (answer) {
-      localStorage.userData = JSON.stringify(answer);
+    let request;
+    try {
+      request = await fetch('/user/login', {
+        method: 'POST',
+        body: JSON.stringify(values),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      return  console.log('fetch error',  error);
     }
-    if (answer.user) {
-      setUserName(answer.user.login);
+    if (request.status === 200) {
+      const answer = await request.json();
+      if (answer) {
+        localStorage.userData = JSON.stringify(answer);
+      }
+      if (answer.user) {
+        setUserName(answer.user.login);
+        setIsCorrect(true);
+      }
+    } else if (request.status === 401) {
+      setIsCorrect(false);
     }
-  } else if (ask.status === 401) {
-    alert('неверный логин / пароль')
-  }
-   
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+
+  
+  if (isCorrect) {
+    status ='';
+    message = '';
+  }  else {
+    status = 'error'
+    message = 'wrong login / password'
+  }
 
   return (
     <Form
@@ -52,6 +66,7 @@ export default function signupForm({ setUserName }) {
       <Form.Item
         label="Login"
         name="login"
+        validateStatus={status}
         placeholder="login"
         rules={[{ required: true, message: 'Please input your username!' }]}
       >
@@ -61,6 +76,8 @@ export default function signupForm({ setUserName }) {
         label="Password"
         name="password"
         placeholder="password"
+        validateStatus={status}
+        help={message}
         rules={[{ required: true, message: 'Please input your password!' }]}
       >
         <Input.Password />
@@ -73,3 +90,5 @@ export default function signupForm({ setUserName }) {
     </Form>
   );
 }
+
+

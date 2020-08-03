@@ -13,7 +13,7 @@ const tailLayout = {
 export default function signupForm() {
 
   const onFinish = (values) => {
-    fetch('http://localhost:8080/user/signup', {
+    fetch('/user/signup', {
       method: 'POST',
       body: JSON.stringify(values),
       headers: {

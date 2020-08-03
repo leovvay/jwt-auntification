@@ -59,7 +59,7 @@ class AuthService {
     const token = this.generateJWt(login);
 
     const link = `<a href="${config.domen}/registration-success?token=${token}">Click here for verify your account</a>`;
-    const message = `<p>you login: ${login}<br>you password: ${password}<br>${link}</p>`
+    const message = `<p>your login: ${login}<br>you password: ${password}<br>${link}</p>`
     mailer({
       from: config.mailUser,
       to: email,
