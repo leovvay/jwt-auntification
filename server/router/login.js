@@ -8,7 +8,7 @@ async function login(req, res, next) {
     const { user, token } = await authService.LogIn(login, password);
     return res.send({ user, token });
   } catch (e) {
-    return res.json(e).status(401).end();
+    return res.sendStatus(401);
   }
 }
 
