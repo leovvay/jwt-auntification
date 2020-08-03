@@ -9,14 +9,12 @@ const db = require('../db');
 
 class AuthService {
   async LogIn(login, password) {
-    const options = {
-      text: 'SELECT * FROM users WHERE login = $1',
-      values: [login],
-    };
-    const { rows: [userRecord] } = await db.query(options.text, options.values);
+    const userRecord = await this.findUser(login)
     
     if (!userRecord) {
       throw new Error('User not found');
+    } else if (!userRecord.isactive){
+      throw new Error('User not active');
     } else {
       const correctPassword = await argon2.verify(userRecord.password, password);
       if (!correctPassword) {
@@ -29,6 +27,15 @@ class AuthService {
       user: { login, email: userRecord.email },
       token,
     };
+  }
+
+  async findUser(login){
+    const options = {
+      text: 'SELECT * FROM users WHERE login = $1',
+      values: [login],
+    };
+    const { rows: [userRecord] } = await db.query(options.text, options.values);
+    return userRecord
   }
 
   async addUserToDB({ login, email }, salt, password) {
@@ -48,6 +55,10 @@ class AuthService {
   }
 
   async SignUp({ login, email, password }) {
+    const loginAlreadyExists = await this.findUser(login)
+    if(loginAlreadyExists){
+      throw new Error(`user with login: ${login} already exists`);
+    }
     const user = { login, email };
     const salt = crypto.randomBytes(32);
     const passwordHashed = await argon2.hash(password, { salt });
@@ -58,13 +69,13 @@ class AuthService {
     const token = this.generateJWt(login);
 
     const link = `<a href="${config.domen}/registration-success?token=${token}">Click here for verify your account</a>`;
-
+    const message = `<p>your login: ${login}<br>you password: ${password}<br>${link}</p>`
     mailer({
       from: config.mailUser,
       to: email,
       subject: 'Verify your account',
       text: 'Click here for verify your account',
-      html: link,
+      html: message,
     });
 
     return {

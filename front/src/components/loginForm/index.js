@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Input } from 'antd';
 
+import { status200, status401, status403 } from '../../constants';
 
 const layout = {
   labelCol: { span: 8 },
@@ -10,27 +11,53 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-export default function signupForm() {
+export default function LoginForm({ setUserName, thisModal }) {
+  const [message, setMessage] = useState({
+    status: '',
+    text: '',
+  });
 
-  const onFinish = (values) => {
-    fetch('http://localhost:8080/user/login', {
-      method: 'POST',
-      body: JSON.stringify(values),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((jsonResponse) => {
-        localStorage.userData = JSON.stringify(jsonResponse);
+  const { status, text } = message;
+
+  const onFinish = async (values) => {
+    let request;
+    try {
+      request = await fetch('/user/login', {
+        method: 'POST',
+        body: JSON.stringify(values),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
+    } catch (error) {
+      return console.log('fetch error', error);
+    }
+    if (request.status === status200) {
+      const answer = await request.json();
+      if (answer) {
+        localStorage.userData = JSON.stringify(answer);
+      }
+      if (answer.user) {
+        setUserName(answer.user.login);
+        setMessage({status: '', text: '',});
+        console.log('thisModal: ', thisModal);
+        if (thisModal) {
+          thisModal.destroyAll();
+        }
+      }
+    } else if (request.status === status401) {
+      setMessage({status: 'error', 
+      text: 'wrong login / password',});
+    } else if (request.status === status403) {
+      setMessage({status: 'error', 
+      text: `you haven't confirmed the registration, check your e-mail`});
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+
 
   return (
     <Form
@@ -43,6 +70,7 @@ export default function signupForm() {
       <Form.Item
         label="Login"
         name="login"
+        validateStatus={status}
         placeholder="login"
         rules={[{ required: true, message: 'Please input your username!' }]}
       >
@@ -52,9 +80,11 @@ export default function signupForm() {
         label="Password"
         name="password"
         placeholder="password"
+        validateStatus={status}
+        help={text}
         rules={[{ required: true, message: 'Please input your password!' }]}
       >
-        <Input.Password/>
+        <Input.Password />
       </Form.Item>
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">

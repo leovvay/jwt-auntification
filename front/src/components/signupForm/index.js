@@ -1,5 +1,7 @@
-import React from 'react';
-import { Button, Form, Input } from 'antd';
+import React, { useState } from 'react';
+import { Button, Form, Input, Modal } from 'antd';
+
+import { status200, status401 } from '../../constants';
 
 
 const layout = {
@@ -10,27 +12,41 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-export default function signupForm() {
+export default function SignupForm(props) {
+  const [isAlreadyExists, setIsAlreadyExists] = useState(false);
+  let status, message;
 
-  const onFinish = (values) => {
-    fetch('http://localhost:8080/user/signup', {
+  const onFinish = async (values) => {
+    const request = await fetch('/user/signup', {
       method: 'POST',
       body: JSON.stringify(values),
       headers: {
         'Content-Type': 'application/json',
       },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((jsonResponse) => {
-        localStorage.userData = JSON.stringify(jsonResponse);
+    });
+    if (request.status === status200) {
+      const answer = request.json();
+      localStorage.userData = JSON.stringify(answer);
+      setIsAlreadyExists(false);
+      Modal.success({
+        content: `an email: ${values.email} was sent to confirm the registration`,
       });
+    } else if (request.status === status401) {
+      setIsAlreadyExists(values.login);
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+
+  if (isAlreadyExists) {
+    status = 'error';
+    message = `login: ${isAlreadyExists} is already exists`;
+  } else {
+    status = '';
+    message = ``;
+  }
 
   return (
     <Form
@@ -43,6 +59,8 @@ export default function signupForm() {
       <Form.Item
         label="Login"
         name="login"
+        validateStatus={status}
+        help={message}
         placeholder="login"
         rules={[{ required: true, message: 'Please input your username!' }]}
       >
@@ -70,7 +88,7 @@ export default function signupForm() {
         placeholder="password"
         rules={[{ required: true, message: 'Please input your password!' }]}
       >
-        <Input.Password/>
+        <Input.Password />
       </Form.Item>
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">

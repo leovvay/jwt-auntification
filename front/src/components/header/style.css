@@ -1,0 +1,22 @@
+header img {
+    filter: invert(100%)
+}
+
+
+.userInfo{
+    margin-left: 100px;
+}
+
+.container {
+    margin: auto;
+    height: 100%;
+    min-height: 50px;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.container button {
+    margin: 10px;
+}

@@ -8,7 +8,10 @@ async function login(req, res, next) {
     const { user, token } = await authService.LogIn(login, password);
     return res.send({ user, token });
   } catch (e) {
-    return res.json(e).status(401).end();
+    if (e.message === 'User not active') {
+      return res.sendStatus(403);
+    }
+    return res.sendStatus(401);
   }
 }
 
