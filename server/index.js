@@ -3,7 +3,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const server = require('http');
+const cors = require('cors');
+
 const router = require('./router/router');
+
+const config = require('./config');
 
 
 const app = express();
@@ -22,10 +26,8 @@ app.use((req, res, next) => {
 });
 
 //pre-flight requests
-app.options('*', function (req, res) {
-  res.sendStatus(200);
+app.options('*', cors());
 
-});
 
 myServer.listen(port, (err) => {
   if (err) {

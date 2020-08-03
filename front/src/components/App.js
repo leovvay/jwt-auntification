@@ -1,70 +1,41 @@
-import React, { useRef } from 'react';
+import React, {useEffect} from 'react';
+import {Switch, Route, useLocation} from 'react-router-dom'
 
-import { Button, Form, Input } from 'antd';
+import SignupForm from './signupForm/';
+import LoginForm from './loginForm/'
+import RegistrationSuccess from './RegistrationSuccess';
+import Page404 from './Page404/';
+
 import './App.css';
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
-
 function App() {
-  const refLogin = useRef(null);
-  const refPassword = useRef(null);
+  const location = useLocation();
 
-
-  const onFinish = values => {
-    fetch('http://localhost:8080/user/signup', {
-    method: 'POST',
-    body: JSON.stringify(values),
-    headers: {
-      'Content-Type': 'application/json'
+  useEffect(() => {
+    const [ , token] = location.search.split('=');
+    const localToken = JSON.parse(localStorage.userData).token
+    if (token === localToken) {
+      console.log('да да это он');
+      fetch('http://localhost:8080/user/activeUser', {
+        method: 'POST',
+        body: localStorage.userData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
     }
-	}).then((response) => {
-		return response.json();
-	}).then((jsonAnswer) => {
-    console.log('jsonAnswer: ', jsonAnswer);
-  })
-  };
-
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
-  };
+  }, [location]) 
 
   return (
     <div className="App">
       <main className="App-header">
-        <p>Введите логин и пароль...</p>
-        <Form {...layout} 
-        name="basic" 
-        initialValues={{ remember: true }} 
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        >
-          <Form.Item
-            label="Login"
-            name="login"
-            placeholder="login"
-           
-            rules={[{ required: true, message: 'Please input your username!' }]}
-          >
-            <Input  ref={refLogin} />
-          </Form.Item >
-          <Form.Item
-            label="Password"
-            name="password"
-            placeholder="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
-          >
-            <Input.Password ref={refPassword}/>
-          </Form.Item>
-          <Form.Item {...tailLayout}>
-            <Button type="primary" htmlType="submit">Submit</Button>
-          </Form.Item>
-        </Form>
+      <Switch>
+        <Route exact path='/' component={SignupForm}/>
+        <Route exact path='/login' component={LoginForm}/>
+        <Route exact path='/registration-success' component={RegistrationSuccess}/>
+        <Route component={Page404}/>
+      </Switch>
+
       </main>
     </div>
   );
