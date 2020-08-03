@@ -41,6 +41,7 @@ function App() {
         <Route exact path='/registration-success' component={RegistrationSuccess}/>
         <Route component={Page404}/>
       </Switch>
+
       </main>
     </div>
   );
