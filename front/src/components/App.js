@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-
 import {Switch, Route, useLocation} from 'react-router-dom'
 
 import SignupForm from './signupForm/';
@@ -9,9 +8,6 @@ import Page404 from './Page404/';
 import Header from './header/'
 
 import './App.css';
-
- 
-    
 
 function App() {
   const location = useLocation();
