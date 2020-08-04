@@ -21,9 +21,9 @@ function App() {
     if (token) {
       fetch('/user/activeUser', {
         method: 'POST',
-        body: localStorage.userData,
         headers: {
           'Content-Type': 'application/json',
+          authorization: `Bearer ${token}`,
         },
       });
     }

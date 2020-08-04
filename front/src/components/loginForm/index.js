@@ -32,32 +32,38 @@ export default function LoginForm({ setUserName, thisModal }) {
     } catch (error) {
       return console.log('fetch error', error);
     }
-    if (request.status === OK) {
-      const answer = await request.json();
-      if (answer) {
-        localStorage.userData = JSON.stringify(answer);
-      }
-      if (answer.user) {
-        setUserName(answer.user.login);
-        setMessage({status: '', text: '',});
-        console.log('thisModal: ', thisModal);
-        if (thisModal) {
-          thisModal.destroyAll();
+    switch (request.status) {
+      case OK:
+        const answer = await request.json();
+        if (answer) {
+          sessionStorage.token = answer.token;
+          if (answer.user) {
+            setUserName(answer.user.login);
+            setMessage({ status: '', text: '' });
+            if (thisModal) {
+              thisModal.destroyAll();
+            }
+          }
         }
-      }
-    } else if (request.status === UNAUTHORIZED) {
-      setMessage({status: 'error', 
-      text: 'wrong login / password',});
-    } else if (request.status === FORBIDDEN) {
-      setMessage({status: 'error', 
-      text: `you haven't confirmed the registration, check your e-mail`});
+        break;
+      case UNAUTHORIZED:
+        setMessage({ status: 'error', text: 'wrong login / password' });
+        break;
+      case FORBIDDEN:
+        setMessage({
+          status: 'error',
+          text: `you haven't confirmed the registration, check your e-mail`,
+        });
+        break;
+
+      default:
+        break;
     }
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
-
 
   return (
     <Form

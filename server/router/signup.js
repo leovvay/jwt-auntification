@@ -9,6 +9,7 @@ async function signup(req, res, next) {
     const { user, token } = await authService.SignUp(req.body);
     return res.send({ user, token });
   } catch (e) {
+    console.log('e: ', e);
     return res.sendStatus(UNAUTHORIZED);
   }
 }
