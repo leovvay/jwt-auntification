@@ -1,5 +1,7 @@
 const AuthService = require('../services/auch.js');
 
+const {FORBIDDEN, UNAUTHORIZED} = require('../constants');
+
 async function login(req, res, next) {
   try {
     const { login, password } = req.body;
@@ -9,9 +11,9 @@ async function login(req, res, next) {
     return res.send({ user, token });
   } catch (e) {
     if (e.message === 'User not active') {
-      return res.sendStatus(403);
+      return res.sendStatus(FORBIDDEN);
     }
-    return res.sendStatus(401);
+    return res.sendStatus(UNAUTHORIZED);
   }
 }
 

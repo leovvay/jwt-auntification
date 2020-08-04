@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { Layout } from 'antd';
 
-import SignupForm from './signupForm/';
-import LoginForm from './loginForm/';
+import SignupForm from './signupForm';
+import LoginForm from './loginForm';
 import RegistrationSuccess from './RegistrationSuccess';
-import Page404 from './Page404/';
-import Header from './header/';
+import Page404 from './Page404';
+import Header from './header';
 
 import './App.css';
 
@@ -18,13 +18,12 @@ function App() {
 
   useEffect(() => {
     const [, token] = location.search.split('=');
-    const localToken = JSON.parse(localStorage.userData).token;
-    if (token === localToken) {
-      fetch('http://localhost:8080/user/activeUser', {
+    if (token) {
+      fetch('/user/activeUser', {
         method: 'POST',
-        body: localStorage.userData,
         headers: {
           'Content-Type': 'application/json',
+          authorization: `Bearer ${token}`,
         },
       });
     }

@@ -1,12 +1,14 @@
 const AuthService = require('../services/auch.js');
 
-async function activeUser(req, res, next) {
+const {INTERNAL_SERVER_ERROR} = require('../constants')
+
+async function activeUser(req, res) {
   try {
     const authService = new AuthService();
-    await authService.activateUser(req.body);
+    await authService.activateUser(req.currentUser);
     return res.send('now you active');
   } catch (e) {
-    return res.json(e).status(500).end();
+    return res.sendStatus(INTERNAL_SERVER_ERROR);
   }
 }
 

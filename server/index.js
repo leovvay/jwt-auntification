@@ -3,12 +3,11 @@ const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const server = require('http');
 const cors = require('cors');
+const isAuch = require('./middlewares/isAuth')
 
 const router = require('./router/router');
 
 const config = require('./config');
-
-
 
 const app = express();
 const myServer = server.Server(app);
@@ -25,9 +24,10 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/user', router);
+
 //pre-flight requests
 app.options('*', cors());
-
 
 myServer.listen(port, (err) => {
   if (err) {
@@ -37,7 +37,7 @@ myServer.listen(port, (err) => {
   console.log('Node Endpoints working :)');
 });
 
-app.use('/user', router);
+
 
 app.get('/', (err, res) => {
 	res.status(200).send('working: true');

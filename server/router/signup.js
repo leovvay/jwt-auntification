@@ -1,5 +1,7 @@
 const AuthService = require('../services/auch');
 
+const { UNAUTHORIZED} = require('../constants');
+
 
 async function signup(req, res, next) {
   try {
@@ -7,7 +9,8 @@ async function signup(req, res, next) {
     const { user, token } = await authService.SignUp(req.body);
     return res.send({ user, token });
   } catch (e) {
-    return res.sendStatus(401);
+    console.log('e: ', e);
+    return res.sendStatus(UNAUTHORIZED);
   }
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button,  Layout} from 'antd';
 
-import SignupForm from '../signupForm/'
+import SignupForm from '../signupForm'
 import LoginForm from '../loginForm'
 
 import './style.css';
