@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { Layout } from 'antd';
 
-import PageSignap from './pageSignup';
+import PageSignup from './pageSignup';
 import PageLogin from './pageLogin';
 import pageRegistrationSuccess from '../pages/pageRegistrationSuccess';
 import pageWrong from '../pages/pageWrong';
@@ -30,7 +30,7 @@ function App() {
       <Header userName={userName} setUserName={setUserName} />
       <Content className="App-main">
         <Switch>
-          <Route exact path="/" component={PageSignap} />
+          <Route exact path="/" component={PageSignup} />
           <Route exact path="/login" render={() => <PageLogin setUserName={setUserName} />} />
           <Route exact path="/registration-success" component={pageRegistrationSuccess} />
           <Route component={pageWrong}/>
