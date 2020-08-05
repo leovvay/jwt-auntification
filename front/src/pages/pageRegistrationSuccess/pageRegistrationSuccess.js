@@ -4,7 +4,7 @@ import RegistrationSuccess from '../../components/registrationSuccess'
 export default function PageRegistrationSuccess() {
   return (
     <div>
-      <RegistrationSuccess></RegistrationSuccess>
+      <RegistrationSuccess />
     </div>
   );
 }

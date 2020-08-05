@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { Button, Form, Input } from 'antd';
 
 import { OK, UNAUTHORIZED, FORBIDDEN } from '../../constants/statusCode';
-import { COLOR_RED, WRONG_LOGIN_OR_PASSWORD, CHECK_EMAIL } from '../../constants/infoText';
-import MyFetch from '../../utils/MyFetch';
+import { COLOR_RED, WRONG_LOGIN_OR_PASSWORD, CHECK_EMAIL, EMPTY_LOGIN_ERROR, LOGIN_LENGTH_ERROR, EMPTY_PASSWORD_ERROR, PASSWORD_LENGTH_ERROR } from '../../constants/infoText';
+import MyFetch from '../../utils/myFetch';
+
+import MyInput from '../input';
+
 
 const layout = {
   labelCol: { span: 8 },
@@ -13,13 +16,20 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
+
 export default function LoginForm({ setUserName, thisModal }) {
+  const [form] = Form.useForm()
   const [message, setMessage] = useState({
     status: '',
     text: '',
   });
 
-  const { status, text } = message;
+  function inputHandler() {
+    setMessage({
+      status: '',
+      text: '',
+    });
+  }
 
   const onFinish = async (values) => {
     const request = await MyFetch('/user/login', { method: 'POST', body: JSON.stringify(values) });
@@ -60,30 +70,40 @@ export default function LoginForm({ setUserName, thisModal }) {
   return (
     <Form
       {...layout}
+      form={form}
       name="login"
       initialValues={{ remember: true }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >
-      <Form.Item
+      <MyInput
         label="Login"
         name="login"
-        validateStatus={status}
+        message={{ status: message.status }}
         placeholder="login"
-        rules={[{ required: true, message: 'Please input your username!' }]}
+        rules={[{ required: true, message: EMPTY_LOGIN_ERROR }, 
+        {
+          pattern: /^[a-z0-9_-]{3,16}$/i,
+          message: LOGIN_LENGTH_ERROR,
+        },]}
       >
-        <Input />
-      </Form.Item>
-      <Form.Item
+        <Input onInput={inputHandler} />
+      </MyInput>
+      <MyInput
         label="Password"
         name="password"
         placeholder="password"
-        validateStatus={status}
-        help={text}
-        rules={[{ required: true, message: 'Please input your password!' }]}
+        message={message}
+        rules={[
+          {
+            pattern: new RegExp(/^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$/),
+            message: PASSWORD_LENGTH_ERROR,
+          },
+          { required: true, message: EMPTY_PASSWORD_ERROR },
+        ]}
       >
-        <Input.Password />
-      </Form.Item>
+        <Input.Password onInput={inputHandler}/>
+      </MyInput>
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">
           Login

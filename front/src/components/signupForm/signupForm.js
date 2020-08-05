@@ -1,10 +1,12 @@
-
 import React, { useState } from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 
 import { OK, UNAUTHORIZED } from '../../constants/statusCode';
-import {COLOR_RED} from '../../constants/infoText'
-import MyFetch from '../../utils/MyFetch';
+import { COLOR_RED, EMPTY_LOGIN_ERROR, LOGIN_LENGTH_ERROR, EMPTY_PASSWORD_ERROR, PASSWORD_LENGTH_ERROR, EMPTY_EMAIL_ERROR, INVALID_EMAIL_ERROR} from '../../constants/infoText';
+import MyFetch from '../../utils/myFetch';
+
+import MyInput from '../input';
+
 
 const layout = {
   labelCol: { span: 8 },
@@ -14,10 +16,18 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-
 export default function SignupForm(props) {
-  const [isAlreadyExists, setIsAlreadyExists] = useState(false);
-  let status, message;
+  const [message, setMessage] = useState({
+    status: '',
+    text: '',
+  });
+
+  function inputHandler() {
+    setMessage({
+      status: '',
+      text: '',
+    });
+  }
 
   const onFinish = async (values) => {
     const request = await MyFetch('/user/signup', {
@@ -28,14 +38,20 @@ export default function SignupForm(props) {
       case OK:
         const response = await request.json();
         sessionStorage.token = JSON.stringify(response.token);
-        setIsAlreadyExists(false);
+        setMessage({
+          status: '',
+          text: '',
+        });
         Modal.success({
           content: `an email: ${values.email} was sent to confirm the registration`,
         });
         break;
 
       case UNAUTHORIZED:
-        setIsAlreadyExists(values.login);
+        setMessage({
+          status: COLOR_RED,
+          text: `login: ${values.login} is already exists`,
+        });
         break;
       default:
         break;
@@ -46,56 +62,60 @@ export default function SignupForm(props) {
     console.log('Failed:', errorInfo);
   };
 
-  if (isAlreadyExists) {
-    status = COLOR_RED;
-    message = `login: ${isAlreadyExists} is already exists`;
-  } else {
-    status = '';
-    message = '';
-  }
-
   return (
     <Form
       {...layout}
-      name="register"
+      name="registration"
       initialValues={{ remember: true }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >
-      <Form.Item
+      <MyInput
         label="Login"
         name="login"
-        validateStatus={status}
-        help={message}
+        message={{ status: message.status }}
         placeholder="login"
-        rules={[{ required: true, message: 'Please input your username!' }]}
+        rules={[
+          { required: true, message: EMPTY_LOGIN_ERROR },
+          {
+            pattern: /^[a-z0-9_-]{3,16}$/i,
+            message: LOGIN_LENGTH_ERROR,
+          },
+        ]}
       >
-        <Input />
-      </Form.Item>
+        <Input onInput={inputHandler} />
+      </MyInput>
       <Form.Item
         name="email"
         label="E-mail"
         rules={[
           {
             type: 'email',
-            message: 'The input is not valid E-mail!',
+            message: INVALID_EMAIL_ERROR,
           },
           {
             required: true,
-            message: 'Please input your E-mail!',
+            message: EMPTY_EMAIL_ERROR,
           },
         ]}
       >
         <Input />
       </Form.Item>
-      <Form.Item
+      <MyInput
         label="Password"
         name="password"
         placeholder="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
+        message={message}
+        rules={[
+          {
+            pattern: new RegExp(/^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$/),
+            message: PASSWORD_LENGTH_ERROR,
+          },
+          { required: true, message: EMPTY_PASSWORD_ERROR },
+        ]}
       >
-        <Input.Password />
-      </Form.Item>
+        <Input.Password onInput={inputHandler}/>
+      </MyInput>
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">
           Register
