@@ -10,7 +10,7 @@ export default function Input(props) {
         name={name}
         placeholder={placeholder}
         rules={rules}
-        {...props.message.status && {
+        {...props.message?.status && {
           validateStatus: message.status, 
           help: message.text
         }

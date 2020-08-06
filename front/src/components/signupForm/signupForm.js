@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Button, Form, Input, Modal } from 'antd';
+import React from 'react';
+import { Button, Form, Input } from 'antd';
 
-import { OK, UNAUTHORIZED } from '../../constants/statusCode';
-import { COLOR_RED, EMPTY_LOGIN_ERROR, LOGIN_LENGTH_ERROR, EMPTY_PASSWORD_ERROR, PASSWORD_LENGTH_ERROR, EMPTY_EMAIL_ERROR, INVALID_EMAIL_ERROR} from '../../constants/infoText';
-import MyFetch from '../../utils/myFetch';
+import {EMPTY_LOGIN_ERROR, LOGIN_LENGTH_ERROR, EMPTY_PASSWORD_ERROR, PASSWORD_LENGTH_ERROR, EMPTY_EMAIL_ERROR, INVALID_EMAIL_ERROR} from '../../constants/infoText';
+
+import actionSignup from '../../actions/signup';
+import actionChangeMessage from '../../actions/changeInputError';
 
 import MyInput from '../input';
 
@@ -16,46 +17,19 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-export default function SignupForm(props) {
-  const [message, setMessage] = useState({
-    status: '',
-    text: '',
-  });
+export default function SignupForm({ inputErrorMessage: message }) {
 
   function inputHandler() {
-    setMessage({
-      status: '',
-      text: '',
-    });
+    if (message?.text) {
+      actionChangeMessage({
+        status: '',
+        text: '',
+      });
+    }
   }
 
   const onFinish = async (values) => {
-    const request = await MyFetch('/user/signup', {
-      method: 'POST',
-      body: JSON.stringify(values),
-    });
-    switch (request.status) {
-      case OK:
-        const response = await request.json();
-        sessionStorage.token = JSON.stringify(response.token);
-        setMessage({
-          status: '',
-          text: '',
-        });
-        Modal.success({
-          content: `an email: ${values.email} was sent to confirm the registration`,
-        });
-        break;
-
-      case UNAUTHORIZED:
-        setMessage({
-          status: COLOR_RED,
-          text: `login: ${values.login} is already exists`,
-        });
-        break;
-      default:
-        break;
-    }
+    actionSignup(values);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -73,7 +47,7 @@ export default function SignupForm(props) {
       <MyInput
         label="Login"
         name="login"
-        message={{ status: message.status }}
+        message={{ status: message?.status }}
         placeholder="login"
         rules={[
           { required: true, message: EMPTY_LOGIN_ERROR },
@@ -85,9 +59,10 @@ export default function SignupForm(props) {
       >
         <Input onInput={inputHandler} />
       </MyInput>
-      <Form.Item
+      <MyInput
         name="email"
         label="E-mail"
+        message={{ status: message?.status }}
         rules={[
           {
             type: 'email',
@@ -100,7 +75,7 @@ export default function SignupForm(props) {
         ]}
       >
         <Input />
-      </Form.Item>
+      </MyInput>
       <MyInput
         label="Password"
         name="password"

@@ -4,9 +4,7 @@ import App from '../pages/App';
 import {CHANGE_LOGIN} from '../constants/dispatchType'
 
 const mapStateToProps = state => {
-  return {
-    login: state.login,
-  };
+  return state
 };
 
 const mapDispatchToProps = dispatch => {

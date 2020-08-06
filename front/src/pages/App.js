@@ -11,12 +11,10 @@ import MyFetch from '../utils/myFetch';
 
 import './App.css';
 
-
 const { Content } = Layout;
 
 
 export default function App(props) {
-  const { changeLogin } = props
   const location = useLocation();
 
   useEffect(() => {
@@ -32,8 +30,8 @@ export default function App(props) {
       <Header {...props} />
       <Content className="App-main">
         <Switch>
-          <Route exact path="/" component={PageSignup} />
-          <Route exact path="/login" render={() => <PageLogin changeLogin={changeLogin} />} />
+          <Route exact path="/" render={() => <PageSignup {...props} />}/>
+          <Route exact path="/login" render={() => <PageLogin {...props} />} />
           <Route exact path="/registration-success" component={pageRegistrationSuccess} />
           <Route component={pageWrong} />
         </Switch>

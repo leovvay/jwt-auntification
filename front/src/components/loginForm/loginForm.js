@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Form, Input } from 'antd';
 
-import { OK, UNAUTHORIZED, FORBIDDEN } from '../../constants/statusCode';
-import { COLOR_RED, WRONG_LOGIN_OR_PASSWORD, CHECK_EMAIL, EMPTY_LOGIN_ERROR, LOGIN_LENGTH_ERROR, EMPTY_PASSWORD_ERROR, PASSWORD_LENGTH_ERROR } from '../../constants/infoText';
-import MyFetch from '../../utils/myFetch';
+import {
+  EMPTY_LOGIN_ERROR,
+  LOGIN_LENGTH_ERROR,
+  EMPTY_PASSWORD_ERROR,
+  PASSWORD_LENGTH_ERROR,
+} from '../../constants/infoText';
+
+import actionLogin from '../../actions/login';
+import actionChangeMessage from '../../actions/changeInputError';
 
 import MyInput from '../input';
-
 
 const layout = {
   labelCol: { span: 8 },
@@ -16,51 +21,20 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-
-export default function LoginForm({ changeLogin, thisModal }) {
-  const [form] = Form.useForm()
-  const [message, setMessage] = useState({
-    status: '',
-    text: '',
-  });
+export default function LoginForm({ inputErrorMessage: message }) {
+  const [form] = Form.useForm();
 
   function inputHandler() {
-    setMessage({
-      status: '',
-      text: '',
-    });
+    if (message?.text) {
+      actionChangeMessage({
+        status: '',
+        text: '',
+      });
+    }
   }
 
   const onFinish = async (values) => {
-    const request = await MyFetch('/user/login', { method: 'POST', body: JSON.stringify(values) });
-
-    switch (request.status) {
-      case OK:
-        const response = await request.json();
-        if (response) {
-          sessionStorage.token = response.token;
-          if (response.user) {
-            changeLogin(response.user.login);
-            setMessage({ status: '', text: '' });
-            if (thisModal) {
-              thisModal.destroyAll();
-            }
-          }
-        }
-        break;
-      case UNAUTHORIZED:
-        setMessage({ status: COLOR_RED, text: WRONG_LOGIN_OR_PASSWORD });
-        break;
-      case FORBIDDEN:
-        setMessage({
-          status: COLOR_RED,
-          text: CHECK_EMAIL,
-        });
-        break;
-
-      default:
-        break;
-    }
+    actionLogin(values);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -79,15 +53,17 @@ export default function LoginForm({ changeLogin, thisModal }) {
       <MyInput
         label="Login"
         name="login"
-        message={{ status: message.status }}
+        message={{ status: message?.status }}
         placeholder="login"
-        rules={[{ required: true, message: EMPTY_LOGIN_ERROR }, 
-        {
-          pattern: /^[a-z0-9_-]{3,16}$/i,
-          message: LOGIN_LENGTH_ERROR,
-        },]}
+        rules={[
+          { required: true, message: EMPTY_LOGIN_ERROR },
+          {
+            pattern: /^[a-z0-9_-]{3,16}$/i,
+            message: LOGIN_LENGTH_ERROR,
+          },
+        ]}
       >
-        <Input onInput={inputHandler} />
+        <Input onChange={inputHandler} />
       </MyInput>
       <MyInput
         label="Password"
@@ -102,7 +78,7 @@ export default function LoginForm({ changeLogin, thisModal }) {
           { required: true, message: EMPTY_PASSWORD_ERROR },
         ]}
       >
-        <Input.Password onInput={inputHandler}/>
+        <Input.Password onChange={inputHandler} />
       </MyInput>
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">
