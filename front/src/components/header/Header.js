@@ -18,26 +18,27 @@ const ShowSignupForm = () => {
   });
 }
 
-const ShowLoginForm = (event, setUserName) => {
+const ShowLoginForm = (event, changeLogin) => {
   Modal.info({
     title: 'This is a log in message',
     content: (
-      <LoginForm setUserName={setUserName} thisModal={Modal}/>
+      <LoginForm changeLogin={changeLogin} thisModal={Modal}/>
     ),
     okText: 'Cancel'
   });
 }
 
-export default function MyHeader({ userName, setUserName }) {
+export default function MyHeader(props) {
+const { login, changeLogin } = props
   return (
     <Header>
       <div className='container'>
         <div className='userInfo'>
-          <span>{userName}</span>
+          <span>{login}</span>
           <img src="userIcon.png" alt="user icon" />
         </div>
         <Button type="primary" onClick={ShowSignupForm} >Sign up</Button>
-        <Button type="primary" onClick={(event) => ShowLoginForm(event, setUserName)} className='loginBtn'>Log in</Button>
+        <Button type="primary" onClick={(event) => ShowLoginForm(event, changeLogin)} className='loginBtn'>Log in</Button>
       </div>
     </Header>
   );

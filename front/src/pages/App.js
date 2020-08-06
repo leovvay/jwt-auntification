@@ -1,21 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { Layout } from 'antd';
 
 import PageSignup from './pageSignup';
 import PageLogin from './pageLogin';
-import pageRegistrationSuccess from '../pages/pageRegistrationSuccess';
-import pageWrong from '../pages/pageWrong';
+import pageRegistrationSuccess from './pageRegistrationSuccess';
+import pageWrong from './pageWrong';
 import Header from '../components/header';
+import MyFetch from '../utils/myFetch';
 
 import './App.css';
-import MyFetch from '../utils/myFetch';
+
 
 const { Content } = Layout;
 
-function App() {
+
+export default function App(props) {
+  const { changeLogin } = props
   const location = useLocation();
-  const [userName, setUserName] = useState('anonymous');
 
   useEffect(() => {
     const [, token] = location.search.split('=');
@@ -27,17 +29,15 @@ function App() {
 
   return (
     <Layout className="App">
-      <Header userName={userName} setUserName={setUserName} />
+      <Header {...props} />
       <Content className="App-main">
         <Switch>
           <Route exact path="/" component={PageSignup} />
-          <Route exact path="/login" render={() => <PageLogin setUserName={setUserName} />} />
+          <Route exact path="/login" render={() => <PageLogin changeLogin={changeLogin} />} />
           <Route exact path="/registration-success" component={pageRegistrationSuccess} />
-          <Route component={pageWrong}/>
+          <Route component={pageWrong} />
         </Switch>
       </Content>
     </Layout>
   );
 }
-
-export default App;

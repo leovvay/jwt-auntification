@@ -17,7 +17,7 @@ const tailLayout = {
 };
 
 
-export default function LoginForm({ setUserName, thisModal }) {
+export default function LoginForm({ changeLogin, thisModal }) {
   const [form] = Form.useForm()
   const [message, setMessage] = useState({
     status: '',
@@ -40,7 +40,7 @@ export default function LoginForm({ setUserName, thisModal }) {
         if (response) {
           sessionStorage.token = response.token;
           if (response.user) {
-            setUserName(response.user.login);
+            changeLogin(response.user.login);
             setMessage({ status: '', text: '' });
             if (thisModal) {
               thisModal.destroyAll();
