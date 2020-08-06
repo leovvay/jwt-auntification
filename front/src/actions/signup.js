@@ -1,13 +1,14 @@
-import store from '../utils/configure-store';
-
 import { FETCH_SIGNUP } from '../constants/dispatchType';
+import { SIGHUP_PATH } from '../constants/urls';
 
-const actionSignup = (values) =>
-  store.dispatch({
+const actionSignup = (values) => {
+  return {
     type: FETCH_SIGNUP,
-    payload: ['/user/signup', { method: 'POST', body: JSON.stringify(values) }],
-    formValues: values,
-  });
-
-
-  export default actionSignup;
+    payload: {
+      url: SIGHUP_PATH,
+      options: { method: 'POST', body: JSON.stringify(values) },
+      formValues: values,
+    },
+  };
+};
+export default actionSignup;

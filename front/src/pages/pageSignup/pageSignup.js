@@ -7,7 +7,7 @@ import './style.css'
 
 export default function PageSignup(props) {
   return (
-    <div className='formContainer'>
+    <div className='form-container'>
     <SignupForm {...props}/>
     </div>
   );

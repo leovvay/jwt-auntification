@@ -8,8 +8,6 @@ import {
   PASSWORD_LENGTH_ERROR,
 } from '../../constants/infoText';
 
-import actionLogin from '../../actions/login';
-import actionChangeMessage from '../../actions/changeInputError';
 
 import MyInput from '../input';
 
@@ -21,20 +19,18 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-export default function LoginForm({ inputErrorMessage: message }) {
+export default function LoginForm(props) {
+  const { inputErrorMessage: message, loginFetch, changeInputMessage } = props;
   const [form] = Form.useForm();
 
   function inputHandler() {
     if (message?.text) {
-      actionChangeMessage({
-        status: '',
-        text: '',
-      });
+      changeInputMessage({});
     }
   }
 
   const onFinish = async (values) => {
-    actionLogin(values);
+    loginFetch(values);
   };
 
   const onFinishFailed = (errorInfo) => {

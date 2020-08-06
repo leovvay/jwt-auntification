@@ -14,7 +14,7 @@ const initialState = {
   isFetching: false,
 };
 
-export const reducer = function (state = initialState, action) {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case CHANGE_LOGIN:
       return { ...state, login: action.payload };

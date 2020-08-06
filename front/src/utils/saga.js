@@ -15,12 +15,12 @@ import { COLOR_RED, WRONG_LOGIN_OR_PASSWORD, CHECK_EMAIL } from '../constants/in
 import MyFetch from './myFetch';
 
 function* fetchLogin(action) {
+  const { url, options } = action.payload;
   try {
     yield put({ type: START_FETCH });
-    const request = yield call(MyFetch, ...action.payload);
+    const request = yield call(MyFetch, url, options);
     switch (request.status) {
-      case OK:
-        console.log('OK');
+      case OK: {
         const response = yield request.json();
         if (response) {
           sessionStorage.token = response.token;
@@ -29,14 +29,17 @@ function* fetchLogin(action) {
           }
         }
         break;
-      case UNAUTHORIZED:
-        const wrongMessage = { status: COLOR_RED, text: WRONG_LOGIN_OR_PASSWORD };
-        yield put({ type: CHANGE_INPUT_ERROR_MESSAGE, payload: wrongMessage });
+      }
+      case UNAUTHORIZED: {
+        const message = { status: COLOR_RED, text: WRONG_LOGIN_OR_PASSWORD };
+        yield put({ type: CHANGE_INPUT_ERROR_MESSAGE, payload: message });
         break;
-      case FORBIDDEN:
-        const emailMessage = { status: COLOR_RED, text: CHECK_EMAIL };
-        yield put({ type: CHANGE_INPUT_ERROR_MESSAGE, payload: emailMessage });
+      }
+      case FORBIDDEN: {
+        const message = { status: COLOR_RED, text: CHECK_EMAIL };
+        yield put({ type: CHANGE_INPUT_ERROR_MESSAGE, payload: message });
         break;
+      }
       default:
         break;
     }
@@ -47,25 +50,26 @@ function* fetchLogin(action) {
 }
 
 function* fetchSignup(action) {
+  const { url, options, formValues } = action.payload;
   try {
-    const request = yield call(MyFetch, ...action.payload);
-    const { formValues } = action;
+    const request = yield call(MyFetch, url, options);
     switch (request.status) {
-      case OK:
+      case OK: {
         const response = yield request.json();
         sessionStorage.token = response.token;
         Modal.success({
           content: `an email: ${formValues.email} was sent to confirm the registration`,
         });
         break;
-
-      case UNAUTHORIZED:
-        const loginExistsMessage = {
+      }
+      case UNAUTHORIZED: {
+        const message = {
           status: COLOR_RED,
           text: `login: ${formValues.login} is already exists`,
         };
-        yield put({ type: CHANGE_INPUT_ERROR_MESSAGE, payload: loginExistsMessage });
+        yield put({ type: CHANGE_INPUT_ERROR_MESSAGE, payload: message });
         break;
+      }
       default:
         break;
     }

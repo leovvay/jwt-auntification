@@ -8,28 +8,28 @@ import './style.css';
 
 const { Header } = Layout;
 
-const ShowSignupForm = () => {
+const ShowSignupForm = (props) => {
   Modal.info({
     title: 'This is a sign up message',
     content: (
-      <SignupForm/>
+      <SignupForm {...props}/>
     ),
     okText: 'Cancel'
   });
 }
 
-const ShowLoginForm = (event, changeLogin) => {
+const ShowLoginForm = (props) => {
   Modal.info({
     title: 'This is a log in message',
     content: (
-      <LoginForm changeLogin={changeLogin} thisModal={Modal}/>
+      <LoginForm {...props} thisModal={Modal}/>
     ),
     okText: 'Cancel'
   });
 }
 
 export default function MyHeader(props) {
-const { login, changeLogin } = props
+const { login } = props
 
   return (
     <Header>
@@ -38,8 +38,8 @@ const { login, changeLogin } = props
           <span>{login}</span>
           <img src="userIcon.png" alt="user icon" />
         </div>
-        <Button type="primary" onClick={ShowSignupForm} >Sign up</Button>
-        <Button type="primary" onClick={(event) => ShowLoginForm(event, changeLogin)} className='loginBtn'>Log in</Button>
+        <Button type="primary" onClick={ShowSignupForm.bind(null, props)} >Sign up</Button>
+        <Button type="primary" onClick={ShowLoginForm.bind(null, props)} >Log in</Button>
       </div>
     </Header>
   );

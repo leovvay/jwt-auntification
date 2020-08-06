@@ -11,9 +11,9 @@ import AppContainer from './containers/appContainer';
 
 ReactDOM.render(
   <Provider store={store}>
-  <BrowserRouter>
-    <AppContainer />
-  </BrowserRouter>
+    <BrowserRouter>
+      <AppContainer />
+    </BrowserRouter>
   </Provider>,
   document.getElementById('root')
 );

@@ -1,13 +1,16 @@
 import React from 'react';
 import { Button, Form, Input } from 'antd';
 
-import {EMPTY_LOGIN_ERROR, LOGIN_LENGTH_ERROR, EMPTY_PASSWORD_ERROR, PASSWORD_LENGTH_ERROR, EMPTY_EMAIL_ERROR, INVALID_EMAIL_ERROR} from '../../constants/infoText';
-
-import actionSignup from '../../actions/signup';
-import actionChangeMessage from '../../actions/changeInputError';
+import {
+  EMPTY_LOGIN_ERROR,
+  LOGIN_LENGTH_ERROR,
+  EMPTY_PASSWORD_ERROR,
+  PASSWORD_LENGTH_ERROR,
+  EMPTY_EMAIL_ERROR,
+  INVALID_EMAIL_ERROR,
+} from '../../constants/infoText';
 
 import MyInput from '../input';
-
 
 const layout = {
   labelCol: { span: 8 },
@@ -17,19 +20,16 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-export default function SignupForm({ inputErrorMessage: message }) {
-
+export default function SignupForm(props) {
+  const { inputErrorMessage: message, signupFetch, changeInputMessage } = props;
   function inputHandler() {
     if (message?.text) {
-      actionChangeMessage({
-        status: '',
-        text: '',
-      });
+      changeInputMessage({});
     }
   }
 
   const onFinish = async (values) => {
-    actionSignup(values);
+    signupFetch(values);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -89,7 +89,7 @@ export default function SignupForm({ inputErrorMessage: message }) {
           { required: true, message: EMPTY_PASSWORD_ERROR },
         ]}
       >
-        <Input.Password onInput={inputHandler}/>
+        <Input.Password onInput={inputHandler} />
       </MyInput>
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">
