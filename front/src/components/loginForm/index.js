@@ -1,3 +1,15 @@
-import loginForm from './loginForm';
+import React from 'react';
+import { Spin } from 'antd';
 
-export default loginForm;
+import LoginForm from './loginForm';
+
+const spinForm = (props) => {
+  const { isFetching } = props;
+  return (
+    <Spin spinning={isFetching}>
+      <LoginForm {...props} />
+    </Spin>
+  );
+};
+
+export default spinForm;
