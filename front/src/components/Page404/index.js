@@ -1,13 +1,3 @@
-import React from 'react';
-import { Typography } from 'antd';
+import page404 from './page404'
 
-const { Title } = Typography;
-
-export default function Page404() {
-  return (
-    <div>
-      <Title>404</Title>
-      <Title level={4}>Something went wrong</Title>
-    </div>
-  );
-}
+export default page404;
