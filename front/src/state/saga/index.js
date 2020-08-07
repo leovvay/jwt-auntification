@@ -4,21 +4,14 @@ import { Modal } from 'antd';
 import MyFetch from 'utils/myFetch';
 import { OK, UNAUTHORIZED, FORBIDDEN } from 'constants/statusCode';
 import { COLOR_RED, WRONG_LOGIN_OR_PASSWORD, CHECK_EMAIL } from 'constants/infoText';
+import * as authActions from 'state/actions/authenticationActions';
 
-import {
-  FETCH_LOGIN,
-  CHANGE_LOGIN,
-  CHANGE_INPUT_ERROR_MESSAGE,
-  FETCH_SIGNUP,
-  START_FETCH,
-  END_FETCH,
-} from '../actionTypes';
-
+import { FETCH_LOGIN, FETCH_SIGNUP } from '../actionTypes';
 
 function* fetchLogin(action) {
   const { url, options } = action.payload;
   try {
-    yield put({ type: START_FETCH });
+    yield put(authActions.startFetch());
     const request = yield call(MyFetch, url, options);
     switch (request.status) {
       case OK: {
@@ -26,27 +19,27 @@ function* fetchLogin(action) {
         if (response) {
           sessionStorage.token = response.token;
           if (response.user) {
-            yield put({ type: CHANGE_LOGIN, payload: response.user.login });
+            yield put(authActions.changeLogin(response.user.login));
           }
         }
         break;
       }
       case UNAUTHORIZED: {
         const message = { status: COLOR_RED, text: WRONG_LOGIN_OR_PASSWORD };
-        yield put({ type: CHANGE_INPUT_ERROR_MESSAGE, payload: message });
+        yield put(authActions.changeInputError(message));
         break;
       }
       case FORBIDDEN: {
         const message = { status: COLOR_RED, text: CHECK_EMAIL };
-        yield put({ type: CHANGE_INPUT_ERROR_MESSAGE, payload: message });
+        yield put(authActions.changeInputError(message));
         break;
       }
       default:
         break;
     }
-    yield put({ type: END_FETCH });
+    yield put(authActions.endFetch());
   } catch (e) {
-    yield put({ type: 'USER_FETCH_FAILED', message: e.message });
+    yield put(authActions.userFetchFailed());
   }
 }
 
@@ -68,14 +61,14 @@ function* fetchSignup(action) {
           status: COLOR_RED,
           text: `login: ${formValues.login} is already exists`,
         };
-        yield put({ type: CHANGE_INPUT_ERROR_MESSAGE, payload: message });
+        yield put(authActions.changeInputError(message));
         break;
       }
       default:
         break;
     }
   } catch (e) {
-    yield put({ type: 'USER_FETCH_FAILED', message: e.message });
+    yield put(authActions.userFetchFailed());
   }
 }
 

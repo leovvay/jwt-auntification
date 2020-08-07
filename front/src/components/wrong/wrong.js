@@ -3,7 +3,7 @@ import { Typography } from 'antd';
 
 const { Title } = Typography;
 
-export default function Page404() {
+export default function Wrong() {
   return (
     <>
       <Title>404</Title>

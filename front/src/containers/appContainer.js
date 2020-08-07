@@ -1,20 +1,17 @@
-import { createSelector } from 'reselect'
+import { createSelector } from 'reselect';
 
 import { connect } from 'react-redux';
 
 import App from 'pages/App';
 
-import actionSignup from 'state/actions/signup';
-import actionLogin from 'state/actions/login';
-import actionsChangeInputMessage from 'state/actions/changeInputError'
+import * as authActions from 'state/actions/authenticationActions';
 
-const getLogin = state => state.login;
-const getIsFetching = state => state.isFetching;
-const getInputErrorMessage = state => state.inputErrorMessage;
 
-const loginSelector = createSelector([getLogin], (value) => value);
-const isFetchingSelector = createSelector([getIsFetching], (value) => value);
-const inputErrorMessageSelector = createSelector([getInputErrorMessage], (value) => value);
+const authentication = (state) => state.authentication;
+
+const loginSelector = createSelector([authentication], (value) => value.login);
+const isFetchingSelector = createSelector([authentication], (value) => value.isFetching);
+const inputErrorMessageSelector = createSelector([authentication], (value) => value.inputErrorMessage);
 
 const mapStateToProps = (state) => {
   return {
@@ -26,9 +23,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    signupFetch: (values) => dispatch(actionSignup(values)),
-    loginFetch: (values) => dispatch(actionLogin(values)),
-    changeInputMessage: (message) => dispatch(actionsChangeInputMessage(message)),
+    signupFetch: (values) => dispatch(authActions.actionSignup(values)),
+    loginFetch: (values) => dispatch(authActions.loginAction(values)),
+    changeInputMessage: (message) => dispatch(authActions.changeInputError(message)),
   };
 };
 
