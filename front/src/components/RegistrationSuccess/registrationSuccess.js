@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, } from 'antd';
 import { Link } from 'react-router-dom'
 
-import {LOGIN_PATH} from '../../constants/routerPath'
+import {LOGIN_PATH} from 'constants/routerPath'
 
 const { Title } = Typography;
 

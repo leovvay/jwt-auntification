@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SignupForm from '../../components/signupForm';
+import SignupForm from 'components/signupForm';
 
 import './style.css'
 
@@ -8,7 +8,7 @@ import './style.css'
 export default function PageSignup(props) {
   return (
     <div className='form-container'>
-    <SignupForm {...props}/>
+      <SignupForm {...props} />
     </div>
   );
 }

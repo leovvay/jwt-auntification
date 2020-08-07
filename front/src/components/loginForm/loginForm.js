@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button, Form, Input } from 'antd';
 
-import { PASSWORD_REG_EXP, LOGIN_REG_EXP } from '../../constants/regExp';
+import { PASSWORD_REG_EXP, LOGIN_REG_EXP } from 'constants/regExp';
 import {
   EMPTY_LOGIN_ERROR,
   LOGIN_LENGTH_ERROR,
   EMPTY_PASSWORD_ERROR,
   PASSWORD_LENGTH_ERROR,
-} from '../../constants/infoText';
+} from 'constants/infoText';
 
 import MyInput from '../input';
 

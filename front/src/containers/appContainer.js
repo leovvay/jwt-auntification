@@ -1,18 +1,31 @@
-import { connect } from 'react-redux';
-import App from '../pages/App';
+import { createSelector } from 'reselect'
 
-import { CHANGE_LOGIN } from '../constants/dispatchType';
-import actionSignup from '../actions/signup';
-import actionLogin from '../actions/login';
-import actionsChangeInputMessage from '../actions/changeInputError'
+import { connect } from 'react-redux';
+
+import App from 'pages/App';
+
+import actionSignup from 'state/actions/signup';
+import actionLogin from 'state/actions/login';
+import actionsChangeInputMessage from 'state/actions/changeInputError'
+
+const getLogin = state => state.login;
+const getIsFetching = state => state.isFetching;
+const getInputErrorMessage = state => state.inputErrorMessage;
+
+const loginSelector = createSelector([getLogin], (value) => value);
+const isFetchingSelector = createSelector([getIsFetching], (value) => value);
+const inputErrorMessageSelector = createSelector([getInputErrorMessage], (value) => value);
 
 const mapStateToProps = (state) => {
-  return state;
+  return {
+    login: loginSelector(state),
+    isFetching: isFetchingSelector(state),
+    inputErrorMessage: inputErrorMessageSelector(state),
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    changeLogin: (login) => dispatch({ type: CHANGE_LOGIN, payload: login }),
     signupFetch: (values) => dispatch(actionSignup(values)),
     loginFetch: (values) => dispatch(actionLogin(values)),
     changeInputMessage: (message) => dispatch(actionsChangeInputMessage(message)),

@@ -1,6 +1,10 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { Modal } from 'antd';
 
+import MyFetch from 'utils/myFetch';
+import { OK, UNAUTHORIZED, FORBIDDEN } from 'constants/statusCode';
+import { COLOR_RED, WRONG_LOGIN_OR_PASSWORD, CHECK_EMAIL } from 'constants/infoText';
+
 import {
   FETCH_LOGIN,
   CHANGE_LOGIN,
@@ -8,11 +12,8 @@ import {
   FETCH_SIGNUP,
   START_FETCH,
   END_FETCH,
-} from '../constants/dispatchType';
-import { OK, UNAUTHORIZED, FORBIDDEN } from '../constants/statusCode';
-import { COLOR_RED, WRONG_LOGIN_OR_PASSWORD, CHECK_EMAIL } from '../constants/infoText';
+} from '../actionTypes';
 
-import MyFetch from './myFetch';
 
 function* fetchLogin(action) {
   const { url, options } = action.payload;

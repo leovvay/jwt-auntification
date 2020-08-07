@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Form, Input } from 'antd';
 
-import {PASSWORD_REG_EXP, LOGIN_REG_EXP} from '../../constants/regExp'
+import {PASSWORD_REG_EXP, LOGIN_REG_EXP} from 'constants/regExp'
 import {
   EMPTY_LOGIN_ERROR,
   LOGIN_LENGTH_ERROR,
@@ -9,7 +9,7 @@ import {
   PASSWORD_LENGTH_ERROR,
   EMPTY_EMAIL_ERROR,
   INVALID_EMAIL_ERROR,
-} from '../../constants/infoText';
+} from 'constants/infoText';
 
 import MyInput from '../input';
 
@@ -23,6 +23,7 @@ const tailLayout = {
 
 export default function SignupForm(props) {
   const { inputErrorMessage: message, signupFetch, changeInputMessage } = props;
+
   function inputHandler() {
     if (message?.text) {
       changeInputMessage({});
@@ -30,6 +31,7 @@ export default function SignupForm(props) {
   }
 
   const onFinish = async (values) => {
+    console.log('values: ', values);
     signupFetch(values);
   };
 
@@ -75,7 +77,7 @@ export default function SignupForm(props) {
           },
         ]}
       >
-        <Input />
+        <Input onInput={inputHandler}/>
       </MyInput>
       <MyInput
         label="Password"

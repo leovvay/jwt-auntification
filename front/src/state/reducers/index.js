@@ -3,16 +3,14 @@ import {
   CHANGE_INPUT_ERROR_MESSAGE,
   START_FETCH,
   END_FETCH,
-} from '../constants/dispatchType';
+} from '../actionTypes';
 
 const initialState = {
   login: 'anonymous',
-  inputErrorMessage: {
-    status: '',
-    text: '',
-  },
+  inputErrorMessage: {},
   isFetching: false,
 };
+
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {

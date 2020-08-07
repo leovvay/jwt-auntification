@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { Layout } from 'antd';
 
-import Header from '../components/header';
-import MyFetch from '../utils/myFetch';
-import { ACTIVE_USER_PATH } from '../constants/urls';
-import { LOGIN_PATH, REGISTRATION_SUCCESS_PATH } from '../constants/routerPath';
+import Header from 'components/header';
+import MyFetch from 'utils/myFetch';
+import { ACTIVE_USER_PATH } from 'constants/urls';
+import { LOGIN_PATH, REGISTRATION_SUCCESS_PATH } from 'constants/routerPath';
 
 import PageSignup from './pageSignup';
 import PageLogin from './pageLogin';
@@ -30,7 +30,7 @@ export default function App(props) {
 
   return (
     <Layout className="App">
-      <Header login={login} />
+      <Header login={login} changeInputMessage={changeInputMessage} />
       <Content className="App-main">
         <Switch>
           <Route
@@ -40,7 +40,7 @@ export default function App(props) {
               <PageSignup
                 inputErrorMessage={inputErrorMessage}
                 signupFetch={signupFetch}
-                changeInputMessage={signupFetch}
+                changeInputMessage={changeInputMessage}
               />
             )}
           />

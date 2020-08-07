@@ -1,5 +1,5 @@
 import React from 'react';
-import Page404 from '../../components/page404'
+import Page404 from 'components/page404'
 
 export default function PageWrong() {
   return (
