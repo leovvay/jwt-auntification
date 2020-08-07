@@ -14,6 +14,6 @@ module.exports = jwt({
   secret: config.secretKey,
   algorithms: ['HS256'],
   credentialsRequired : false, 
-  requestProperty: 'token', // this is where the next middleware can find the encoded data generated in services/auth:generateToken
+  requestProperty: 'token', 
   getToken: getTokenFromHeader
 });

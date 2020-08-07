@@ -3,11 +3,11 @@ import { Typography } from 'antd';
 
 const { Title } = Typography;
 
-export default function Page404() {
+export default function Wrong() {
   return (
-    <div>
+    <>
       <Title>404</Title>
       <Title level={4}>Something went wrong</Title>
-    </div>
+    </>
   );
 }
