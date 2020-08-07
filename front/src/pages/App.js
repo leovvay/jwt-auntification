@@ -17,7 +17,7 @@ import './App.css';
 const { Content } = Layout;
 
 export default function App(props) {
-  const { changeInputMessage, loginFetch, inputErrorMessage, isFetching, signupFetch } = props;
+  const { changeInputMessage, loginFetch, inputErrorMessage, isFetching, signupFetch, login } = props;
   const location = useLocation();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function App(props) {
 
   return (
     <Layout className="App">
-      <Header {...props} />
+      <Header login={login} />
       <Content className="App-main">
         <Switch>
           <Route

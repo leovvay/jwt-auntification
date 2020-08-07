@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button, Form, Input } from 'antd';
 
+import { PASSWORD_REG_EXP, LOGIN_REG_EXP } from '../../constants/regExp';
 import {
   EMPTY_LOGIN_ERROR,
   LOGIN_LENGTH_ERROR,
   EMPTY_PASSWORD_ERROR,
   PASSWORD_LENGTH_ERROR,
 } from '../../constants/infoText';
-
 
 import MyInput from '../input';
 
@@ -54,7 +54,7 @@ export default function LoginForm(props) {
         rules={[
           { required: true, message: EMPTY_LOGIN_ERROR },
           {
-            pattern: /^[a-z0-9_-]{3,16}$/i,
+            pattern: LOGIN_REG_EXP,
             message: LOGIN_LENGTH_ERROR,
           },
         ]}
@@ -68,7 +68,7 @@ export default function LoginForm(props) {
         message={message}
         rules={[
           {
-            pattern: new RegExp(/^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$/),
+            pattern: PASSWORD_REG_EXP,
             message: PASSWORD_LENGTH_ERROR,
           },
           { required: true, message: EMPTY_PASSWORD_ERROR },

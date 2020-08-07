@@ -2,7 +2,7 @@ import React from 'react'
 import {Form} from 'antd';
 
 export default function Input(props) {
-  const {label, name, placeholder, rules, message} = props;
+  const { label, name, placeholder, rules, message } = props;
 
     return (
       <Form.Item
